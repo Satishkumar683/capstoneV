@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Large Datasets & Archives (Exceeds GitHub 100MB limit)
+*.zip
+*.tar
+*.tar.gz
+dataset/
+output/
+outputs/checkpoints/
+
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
