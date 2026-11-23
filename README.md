@@ -144,13 +144,13 @@ capstoneV/
 
 ## Installation & Environment Setup
 
-### 1. Clone or Open the Project
-Open the folder in your terminal or Visual Studio Code:
-```powershell
-cd C:\Users\HP\Downloads\capstoneV
+### 1. Clone the Project
+```bash
+git clone https://github.com/Satishkumar683/capstoneV.git
+cd capstoneV
 ```
 
-### 2. Create Virtual Environment (Optional but Recommended)
+### 2. Create Virtual Environment
 ```powershell
 python -m venv venv
 .\venv\Scripts\activate
@@ -170,20 +170,25 @@ pip install -r requirements.txt
 2. Press **`Ctrl + Shift + D`** (or click the **Run and Debug** icon on the left bar).
 3. Select any profile from the top dropdown and press **`F5`** (or click the green Play button):
    * 🟢 **`Python: Fast Test Run (2 Epochs, CPU)`**: Quick sanity check on 2 epochs.
-   * 🟢 **`Python: Full Pipeline (Train + Evaluate)`**: Full training and testing on CASIA-B.
+   * 🟢 **`Python: Balanced Run (12 Epochs)`**: Optimal 12-epoch balanced run (~1 to 1.5 hrs).
+   * 🟢 **`Python: Full Pipeline (25 Epochs)`**: Full 25-epoch benchmark training on CASIA-B.
    * 🟢 **`Python: Evaluation Only`**: Runs cross-view evaluation using saved weights.
 
 ### Option 2: Windows One-Click Batch Runner
-Double-click [`run_windows.bat`](file:///C:/Users/HP/Downloads/capstoneV/run_windows.bat) or run from PowerShell:
+Double-click [`run_windows.bat`](file:///c:/Users/raman/Downloads/capstoneV-main/run_windows.bat) or run from PowerShell:
 ```cmd
 .\run_windows.bat
 ```
-Select `1` for full pipeline, `2` for evaluation only, or `3` for a fast 2-epoch test run.
+Select `1` for balanced 12-epoch training, `2` for evaluation only, or `3` for a fast 2-epoch test run.
 
 ### Option 3: PowerShell / Command Prompt (CLI)
-* **Full Pipeline (Train + Evaluate)**:
+* **Balanced 12-Epoch Training & Evaluation (Default)**:
   ```powershell
   python main.py --mode all
+  ```
+* **Full Benchmark (25 Epochs)**:
+  ```powershell
+  python main.py --mode all --epochs 25 --fs_epochs 10
   ```
 * **Fast Test Run on CPU (2 Epochs)**:
   ```powershell
@@ -193,6 +198,13 @@ Select `1` for full pipeline, `2` for evaluation only, or `3` for a fast 2-epoch
   ```powershell
   python main.py --mode eval --weights outputs/checkpoints/final_fewshot_model.weights.h5
   ```
+
+### Smart Checkpointing & Auto-Resume
+The training pipeline automatically saves checkpoints to `outputs/checkpoints/`:
+* `stage1_model.weights.h5`: Saved upon Stage 1 completion.
+* `stage2_model.weights.h5`: Saved upon Stage 2 completion.
+* `final_fewshot_model.weights.h5`: Saved upon Few-Shot adaptation completion.
+* **Auto-Resume**: If training is ever interrupted, running the command again will automatically detect the saved checkpoints, load the weights, and resume seamlessly from the next stage without repeating previous stages.
 
 ---
 

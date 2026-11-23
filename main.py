@@ -53,13 +53,13 @@ def parse_args():
     parser.add_argument(
         "--epochs",
         type=int,
-        default=25,
+        default=12,
         help="Number of epochs for Stage 1 and Stage 2 pretraining"
     )
     parser.add_argument(
         "--fs_epochs",
         type=int,
-        default=10,
+        default=5,
         help="Number of epochs for Few-Shot covariate fine-tuning"
     )
     parser.add_argument(
@@ -116,7 +116,11 @@ def main():
     if args.mode in ["all", "eval"]:
         if model is None:
             # Build model for evaluation
-            num_test_subjects = 50  # Subjects 075 to 124
+            available_subjects = sorted([p.name for p in resolved_data_dir.iterdir() if p.is_dir()]) if resolved_data_dir.exists() else []
+            test_subjects = [s for s in [f"{i:03d}" for i in range(75, 125)] if s in available_subjects]
+            if not test_subjects and available_subjects:
+                test_subjects = available_subjects[max(1, len(available_subjects) // 2):] or available_subjects
+            num_test_subjects = len(test_subjects) if test_subjects else 50
             model = build_crossview_gait_model(num_classes=num_test_subjects)
             weights_file = args.weights
             if weights_file is None:

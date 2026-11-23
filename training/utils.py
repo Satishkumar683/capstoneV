@@ -54,15 +54,31 @@ def ensure_dataset_extracted(zip_path: Path, target_dir: Path) -> Path:
     Checks if CASIA-B dataset is extracted; if not, extracts Casia-B.zip.
     Returns the resolved folder containing subject folders (001, 002, etc.).
     """
+    def find_subjects_folder(base: Path) -> Optional[Path]:
+        if not base.exists():
+            return None
+        if any(p.is_dir() and p.name.isdigit() for p in base.iterdir()):
+            return base.resolve()
+        for sub in base.rglob("*"):
+            if sub.is_dir() and any(p.is_dir() and p.name.isdigit() for p in sub.iterdir()):
+                return sub.resolve()
+        return None
+
     # Check if target directory already has subject folders
-    if target_dir.exists():
-        subfolders = [p for p in target_dir.iterdir() if p.is_dir()]
-        # Check nested output/
-        nested_output = target_dir / "output"
-        if nested_output.is_dir() and any(nested_output.iterdir()):
-            return nested_output.resolve()
-        if subfolders:
-            return target_dir.resolve()
+    found = find_subjects_folder(target_dir)
+    if found:
+        return found
+
+    # If zip_path does not exist directly, look for any matching zip in project root
+    if not zip_path.exists():
+        candidates = [z for z in zip_path.parent.glob("*.zip") if "capstone" not in z.name.lower()]
+        for c in candidates:
+            if any(k in c.name.lower() for k in ["casia", "gait", "dataset"]):
+                zip_path = c
+                break
+        else:
+            if candidates:
+                zip_path = candidates[0]
 
     if zip_path.exists():
         print(f"[*] Extracting {zip_path.name} to {target_dir}...")
@@ -71,9 +87,9 @@ def ensure_dataset_extracted(zip_path: Path, target_dir: Path) -> Path:
             z.extractall(target_dir)
         print("[+] Dataset extraction complete!")
         
-        nested_output = target_dir / "output"
-        if nested_output.is_dir():
-            return nested_output.resolve()
+        found = find_subjects_folder(target_dir)
+        if found:
+            return found
         return target_dir.resolve()
 
     print(f"[!] Warning: Neither {target_dir} nor {zip_path} were found.")

@@ -23,7 +23,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score
+def accuracy_score(y_true, y_pred):
+    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
+    return float(np.mean(y_true == y_pred)) if len(y_true) > 0 else 0.0
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.drawing.image import Image as ExcelImage
@@ -199,7 +201,7 @@ def load_angle_dataset(dataset_dir: Path, subjects, condition, angle):
 # ==============================================================================
 # TRAINING & EVALUATION ROUTINES
 # ==============================================================================
-def train_model(model, ds, epochs=25):
+def train_model(model, ds, epochs=12):
     if ds is None:
         print("[-] Cannot train on empty dataset.")
         return model
@@ -329,8 +331,8 @@ def main():
     parser.add_argument("--data_dir", type=str, default=str(default_data_dir), help="Path to extracted CASIA-B folder")
     parser.add_argument("--zip_path", type=str, default=str(default_zip), help="Path to Casia-B.zip")
     parser.add_argument("--output_dir", type=str, default=str(default_output_dir), help="Directory to save checkpoints/results")
-    parser.add_argument("--epochs", type=int, default=25, help="Epochs for Stage 1 & Stage 2")
-    parser.add_argument("--fs_epochs", type=int, default=10, help="Epochs for Few-Shot fine-tuning")
+    parser.add_argument("--epochs", type=int, default=12, help="Epochs for Stage 1 & Stage 2")
+    parser.add_argument("--fs_epochs", type=int, default=5, help="Epochs for Few-Shot fine-tuning")
     parser.add_argument("--cpu", action="store_true", help="Force CPU mode")
     args = parser.parse_args()
 

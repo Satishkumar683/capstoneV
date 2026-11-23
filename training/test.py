@@ -12,7 +12,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score
+def accuracy_score(y_true, y_pred):
+    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
+    return float(np.mean(y_true == y_pred)) if len(y_true) > 0 else 0.0
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.drawing.image import Image as ExcelImage
@@ -34,7 +36,12 @@ def run_evaluation_pipeline(
     """
     results_dir.mkdir(parents=True, exist_ok=True)
     if subjects is None:
-        subjects = [f"{i:03d}" for i in range(75, 125)]
+        available_subjects = sorted([p.name for p in dataset_dir.iterdir() if p.is_dir()]) if dataset_dir.exists() else []
+        subjects = [s for s in [f"{i:03d}" for i in range(75, 125)] if s in available_subjects]
+        if not subjects and available_subjects:
+            subjects = available_subjects[max(1, len(available_subjects) // 2):] or available_subjects
+        if not subjects:
+            subjects = [f"{i:03d}" for i in range(75, 125)]
 
     test_sets = {
         "nm_05_06": ["nm-05", "nm-06"],

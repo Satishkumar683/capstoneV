@@ -14,7 +14,7 @@ if errorlevel 1 (
 
 echo.
 echo Select an option:
-echo   1. Run Full Training and Evaluation Pipeline
+echo   1. Run Training Pipeline (12 Epochs) and Evaluation
 echo   2. Run Evaluation Only
 echo   3. Run Fast Test Run (2 Epochs on CPU)
 echo   4. Exit
