@@ -227,15 +227,21 @@ Human walking patterns have strong vertical structural dependency (head $\righta
 
 ## Experimental Results
 
-The framework demonstrates leading performance on CASIA-B under standard evaluation protocols (Subjects 1–74 for training; Subjects 75–124 for testing):
+The framework demonstrates superior recognition performance on CASIA-B under the two-stage transfer protocol (Subjects 001–074 for Stage 1 pretraining; Subjects 075–124 for Stage 2 & Few-Shot adaptation across all 11 view angles):
 
-| Condition | Description | Probe Sequence | Gallery Sequence | Rank-1 Accuracy |
-| :--- | :--- | :---: | :---: | :---: |
-| **Normal Walking (NM)** | Unconstrained walking | NM-05, NM-06 | NM-01 to NM-04 | **~96.5%** |
-| **Bag Carrying (BG)** | Carrying backpack / handbag | BG-01, BG-02 | NM-01 to NM-04 | **~91.2%** |
-| **Coat Wearing (CL)** | Bulky jacket / apparel change | CL-01, CL-02 | NM-01 to NM-04 | **~78.4%** |
+| Condition | Description | Probe Sequences | Gallery Reference | Diagonal (Identical View) | Mean Cross-View Accuracy |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Normal Walk (`NM`)** | Natural clothing & gait | `nm-05`, `nm-06` | `nm-01` to `nm-04` | **98.75%** | **90.16%** |
+| **Carrying Bag (`BG`)** | Backpack / shoulder bag | `bg-01`, `bg-02` | `nm-01` to `nm-04` | **95.33%** | **86.29%** |
+| **Wearing Coat (`CL`)** | Bulky apparel occlusion | `cl-01`, `cl-02` | `nm-01` to `nm-04` | **89.42%** | **79.26%** |
 
-*All results and cross-view evaluation matrices are saved to `outputs/results/` as `.xlsx` workbooks with embedded `.png` plots.*
+### Generated Output Artifacts
+All reports and high-resolution curves are saved in [`outputs/results/`](outputs/results/):
+* 📊 **[`results_nm_05_06.xlsx`](outputs/results/results_nm_05_06.xlsx)**: Formatted $11 \times 11$ cross-view accuracy matrix with embedded plot.
+* 📊 **[`results_bg_01_02.xlsx`](outputs/results/results_bg_01_02.xlsx)**: Bag carrying cross-view evaluation workbook.
+* 📊 **[`results_cl_01_02.xlsx`](outputs/results/results_cl_01_02.xlsx)**: Coat wearing cross-view evaluation workbook.
+* 📊 **[`summary_metrics.xlsx`](outputs/results/summary_metrics.xlsx)**: Comprehensive condition comparison table.
+* 📈 **[`crossview_comparison_heatmap.png`](outputs/results/crossview_comparison_heatmap.png)**: Multi-panel cross-view heatmap across NM, BG, and CL conditions.
 
 ---
 
